@@ -7,6 +7,11 @@
   display: block;
 }
 
+.completed {
+  text-decoration: line-line-through solid rgb(0,0,0);
+}
+
+
 #texto-tarefa {
   width: 50%;
   /* width: 500px; */

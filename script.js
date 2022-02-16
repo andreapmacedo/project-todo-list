@@ -6,7 +6,7 @@ btnAdd.addEventListener('click', function () {
   if (inputTextField.value.length > 0) {
     let newLi = document.createElement('li');
     newLi.innerText = inputTextField.value;
-    newLi.className = 'itemList;'
+    newLi.className = 'itemList'
     taskList.appendChild(newLi);
     inputTextField.value = '';
     addBackGroundColor();
@@ -25,6 +25,15 @@ let liItens = document.getElementsByTagName('li');
 function addBackGroundColor(){
   for (let i =0; i < liItens.length; i++){
     console.log(liItens[i]);
+
+
+
+
+
+
+
+
+
     liItens[i].addEventListener('click', function(event){
       
       
@@ -33,6 +42,24 @@ function addBackGroundColor(){
       liItens[i].style.backgroundColor = 'gray';
 
     });
+
+
+    // liItens[i].addEventListener('mouseover', function(event){
+    liItens[i].addEventListener('ondblclick', function(){
+      
+        if (liItens[i].className === 'itemList')
+        {
+          liItens[i].className = 'itemList completed'
+        }
+        else
+        {
+          liItens[i].className = 'itemList'
+        }
+        console.log('duplo clique')
+      });
+  
+
+
   
   }
 }
