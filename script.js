@@ -18,19 +18,32 @@ btnAdd.addEventListener('click', function () {
 
 
 
+
+let selectedItem = 0;
 let liItens = document.getElementsByTagName('li');
 
 function addBackGroundColor(){
   for (let i =0; i < liItens.length; i++){
     console.log(liItens[i]);
     liItens[i].addEventListener('click', function(event){
-      // liItens[i].className = 'item-todo';
+      
+      
+      selectedItem = i;
+      clearSelectedListItem(selectedItem);
       liItens[i].style.backgroundColor = 'gray';
+
     });
   
   }
 }
 
+function clearSelectedListItem (selectedItem){
+  for (let i = 0; i < liItens.length; i += 1) {
+    if(i !== selectedItem){
+      liItens[i].style.backgroundColor = 'rgba(255, 255, 255)';
+    }
+  }
+}
 
 
 function taskAdd() {
