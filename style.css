@@ -1,0 +1,13 @@
+
+.top-container {
+  display: block;
+}
+
+.list-container {
+  display: block;
+}
+
+#texto-tarefa {
+  width: 50%;
+  /* width: 500px; */
+}
