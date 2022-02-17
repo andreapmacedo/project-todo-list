@@ -16,9 +16,6 @@ btnAdd.addEventListener('click', function () {
 
 });
 
-
-
-
 let selectedItem = 0;
 let liItens = document.getElementsByTagName('li');
 
@@ -26,16 +23,7 @@ function addBackGroundColor(){
   for (let i =0; i < liItens.length; i++){
     console.log(liItens[i]);
 
-
-
-
-
-
-
-
-
     liItens[i].addEventListener('click', function(event){
-      
       
       selectedItem = i;
       clearSelectedListItem(selectedItem);
@@ -43,26 +31,21 @@ function addBackGroundColor(){
 
     });
 
-
-    // liItens[i].addEventListener('mouseover', function(event){
-    liItens[i].addEventListener('ondblclick', function(){
-      
-        if (liItens[i].className === 'itemList')
-        {
-          liItens[i].className = 'itemList completed'
-        }
-        else
-        {
-          liItens[i].className = 'itemList'
-        }
-        console.log('duplo clique')
-      });
-  
-
-
+    liItens[i].addEventListener('dblclick', switchCompleted);
   
   }
 }
+// este código foi elaborado por João Pster - Trybe - turma 20 - tribo B
+function switchCompleted(evento) {
+  const elemento = evento.target;
+  if (!elemento.classList.contains('completed')) {
+    elemento.classList.add('completed');
+  } else if (elemento.classList.contains('completed')) {
+    elemento.classList.remove('completed');
+  }
+}
+
+
 
 function clearSelectedListItem (selectedItem){
   for (let i = 0; i < liItens.length; i += 1) {

@@ -7,10 +7,14 @@
   display: block;
 }
 
-.completed {
-  text-decoration: line-line-through solid rgb(0,0,0);
+/* text-decoration: line-line-through solid rgb(0,0,0); */
+/* .completed {
+  text-decoration: line-line-through;
 }
-
+ */
+.completed {
+  text-decoration: line-through;
+}
 
 #texto-tarefa {
   width: 50%;
