@@ -1,5 +1,3 @@
-
-
 // 5 - Adicione um botão com id="criar-tarefa" e, ao clicar nesse botão, um novo item deverá ser criado ao final da lista e o texto do input deve ser limpo
 // O que será verificado:
 // Será verificada a existência de um elemento do tipo button com o id criar-tarefa
@@ -11,11 +9,11 @@ const btnAdd = document.getElementById('criar-tarefa');
 btnAdd.addEventListener('click', function () {
   let inputTextField = document.getElementById('texto-tarefa');
   let taskList = document.querySelector('#lista-tarefas');
-  
+
   // 6 - Ordene os itens da lista de tarefas por ordem de criação
   // O que será verificado:
   // Três itens serão criados na lista e será checado se eles estão ordenados por ordem de criação - ou seja, primeiro o primeiro item criado, depois o segundo, e assim por diante.
-  
+
   if (inputTextField.value.length > 0) {
     let newLi = document.createElement('li');
     newLi.innerText = inputTextField.value;
@@ -57,7 +55,7 @@ function addBackGroundColor() {
 // Será verificado que, quando um elemento da lista é selecionado, o elemento selecionado previamente deixa de sê-lo. Isso é verificado através da presença ou não do estilo background-color: gray no elemento.
 
 
-// este código foi elaborado por João Pster - Trybe - turma 20 - tribo B
+// este código foi elaborado por 
 function switchCompleted(evento) {
   const elemento = evento.target;
   if (!elemento.classList.contains('completed')) {
@@ -85,22 +83,49 @@ function clearSelectedListItem(selectedItem) {
 
 const btnClearAll = document.getElementById('apaga-tudo')
 
-btnClearAll.addEventListener('click', apagarLista);
+btnClearAll.addEventListener('click', clearList);
 
 
-function apagarLista() {
+function clearList() {
   let list = document.getElementById('lista-tarefas')
-    
-    if (list.textContent !== '') {
-      list.textContent = '';
-    }
+  //Material de consulta  
+  //https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
+  //https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+  if (list.textContent !== '') {
+    list.textContent = '';
+  }
 }
 
+// 11 - Adicione um botão com id="remover-finalizados" que quando clicado remove somente os elementos finalizados da sua lista
+// O que será verificado:
+// Será verificado que existe um elemento button com o id remover-finalizados
+// Será verificado que, ao clicar no botão, todos os elementos marcados como feitos são removidos da lista
+const btnClearDone = document.getElementById('remover-finalizados')
+btnClearDone.addEventListener('click', clearDone);
 
-// function taskAdd() {
-//   let taskList = document.getElementById('lista-tarefas');
 
-//   // console.log(taskList);
-// }
+function clearDone() {
+  let nodes = document.getElementsByClassName('completed');
+  console.log('antes' + nodes.length);
 
-// taskAdd();
+  //https://developer.mozilla.org/pt-BR/docs/Web/API/Node/removeChild
+  // Removendo todos os nós filhos de um elemento
+  // var elemento = document.getElementById("topo");
+  
+
+  //https://developer.mozilla.org/pt-BR/docs/Web/API/Node/removeChild
+  // while (list.firstChild) {
+  //   list.removeChild(list.firstChild);
+  // }
+
+  for (let i = 0; i < nodes.length; i += 1) {
+    if (nodes[i].parentNode) {
+      nodes[i].parentNode.removeChild(nodes[i]);
+      i--;
+    }
+
+  }
+  console.log('depois' + nodes.length);
+
+
+}

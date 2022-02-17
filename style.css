@@ -16,6 +16,10 @@
   text-decoration: line-through;
 }
 
+.itemList {
+  user-select: none;
+}
+
 #texto-tarefa {
   width: 50%;
   /* width: 500px; */
