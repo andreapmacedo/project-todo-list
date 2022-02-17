@@ -40,11 +40,9 @@ function addBackGroundColor() {
     console.log(liItens[i]);
 
     liItens[i].addEventListener('click', function (event) {
-
       selectedItem = i;
       clearSelectedListItem(selectedItem);
       liItens[i].style.backgroundColor = 'gray';
-
     });
     // 9 - Clicar duas vezes em um item, faz com que ele seja riscado, indicando que foi completo. Deve ser possível desfazer essa ação clicando novamente duas vezes no item
     liItens[i].addEventListener('dblclick', switchCompleted);
@@ -54,14 +52,12 @@ function addBackGroundColor() {
 // O que será verificado:
 // Será verificado que, quando um elemento da lista é selecionado, o elemento selecionado previamente deixa de sê-lo. Isso é verificado através da presença ou não do estilo background-color: gray no elemento.
 
-
-// este código foi elaborado por 
 function switchCompleted(evento) {
-  const elemento = evento.target;
-  if (!elemento.classList.contains('completed')) {
-    elemento.classList.add('completed');
-  } else if (elemento.classList.contains('completed')) {
-    elemento.classList.remove('completed');
+  const element = evento.target;
+  if (element.classList.contains('completed')) {
+    element.classList.remove('completed');
+  } else {
+    element.classList.add('completed');
   }
 }
 
@@ -73,9 +69,6 @@ function clearSelectedListItem(selectedItem) {
   }
 }
 
-
-
-
 // 10 - Adicione um botão com id="apaga-tudo" que quando clicado deve apagar todos os itens da lista
 // O que será verificado:
 // Será verificado que existe um elemento button com o id apaga-tudo
@@ -84,7 +77,6 @@ function clearSelectedListItem(selectedItem) {
 const btnClearAll = document.getElementById('apaga-tudo')
 
 btnClearAll.addEventListener('click', clearList);
-
 
 function clearList() {
   let list = document.getElementById('lista-tarefas')
@@ -106,8 +98,6 @@ btnClearDone.addEventListener('click', clearDone);
 
 function clearDone() {
   let nodes = document.getElementsByClassName('completed');
-  console.log('antes' + nodes.length);
-
   //https://developer.mozilla.org/pt-BR/docs/Web/API/Node/removeChild
   // Removendo todos os nós filhos de um elemento
   // var elemento = document.getElementById("topo");
@@ -121,11 +111,55 @@ function clearDone() {
   for (let i = 0; i < nodes.length; i += 1) {
     if (nodes[i].parentNode) {
       nodes[i].parentNode.removeChild(nodes[i]);
-      i--;
+      i--; // este decremento é necessário para compensar o ítem removido da lista que irá automaticamente diminuir com a remoção do filho
     }
-
   }
-  console.log('depois' + nodes.length);
-
-
 }
+
+
+// BÔNUS
+// 12 - Adicione um botão com id="salvar-tarefas" que salve o conteúdo da lista. Se você fechar e reabrir a página, a lista deve continuar no estado em que estava
+// O que será verificado:
+// Será verificado que existe um elemento button com o id salvar-tarefas
+// Será verificado que, quando a lista tiver vários elementos, alguns dos quais marcados como finalizados, um recarregamento da página mantém a lista exatamente como está.
+
+// function criarObjetoParaSalvar(elementoOrigem) {
+//   const objetoTarefas = {};
+//   for (let i = 0; i < elementoOrigem.length; i += 1) {
+//     const objetoInterno = {};
+//     objetoTarefas[`${i}`] = objetoInterno;
+//   }
+//   return objetoTarefas;
+// }
+
+// function salvarTarefas() {
+//   const elementosDaListaDeTarefas = listaDeTarefas.children;
+//   const objetoTarefas = criarObjetoParaSalvar(elementosDaListaDeTarefas);
+
+//   for (let i = 0; i < elementosDaListaDeTarefas.length; i += 1) {
+//     objetoTarefas[`${i}`].innerHTML = elementosDaListaDeTarefas[i].innerHTML;
+//     objetoTarefas[`${i}`].className = elementosDaListaDeTarefas[i].className;
+//     objetoTarefas[`${i}`].id = elementosDaListaDeTarefas[i].id;
+//   }
+//   localStorage.setItem('tarefas', JSON.stringify(objetoTarefas));
+// }
+
+
+// 13 - Adicione dois botões, um com id="mover-cima" e outro com id="mover-baixo", que permitam mover o item selecionado para cima ou para baixo na lista de tarefas
+// O que será verificado:
+// Será verificada a existência de dois elementos button, um com o id mover-cima e o outro com o id mover-baixo
+// Será verificado que, dado que diversos elementos foram acrescentados à lista, movimentá-los de formas diversas os deixa nas posições esperadas
+// Será verificado que, caso algum elemento esteja finalizado, este status deve persistir ainda que se mova o elemento
+// Será verificado que, caso nenhum elemento esteja selecionado, clicar nos botões não altera a lista
+// Será verificado que um elemento que esteja selecionado deve se manter selecionado mesmo depois de movido
+// Caso especial! Será verificado que, caso se tente subir o elemento no topo da lista ou, caso se tente descer o último elemento da lista, esta não deve ser alterada
+
+
+
+
+
+
+// 14 - Adicione um botão com id="remover-selecionado" que, quando clicado, remove o item selecionado
+// O que será verificado:
+// Será verificada a presença de um elemento button com um id remover-selecionado
+// Será verificado que, no clicar no botão, somente o elemento selecionado é removido
