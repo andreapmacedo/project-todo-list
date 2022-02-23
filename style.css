@@ -24,3 +24,11 @@
   width: 50%;
   /* width: 500px; */
 }
+
+/* .completed {
+  text-decoration: line-through solid black;
+} */
+
+.selected {
+  background-color: gray;
+}

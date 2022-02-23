@@ -1,249 +1,179 @@
-/*
-Declaração das constantes e variáveis globais
-*/
-
 const inputTextField = document.getElementById('texto-tarefa');
-const taskList = document.querySelector('#lista-tarefas');
+const taskList = document.querySelector('#lista-tarefas'); //ol
 const liItens = document.getElementsByTagName('li');
 
-/*
-  -(botões)
-*/
 const btnAdd = document.getElementById('criar-tarefa');
 const btnClearAll = document.getElementById('apaga-tudo');
-const btnClearDone = document.getElementById('remover-finalizados');
-const btnSaveTask = document.getElementById('salvar-tarefas');
+const btnClearCompleted = document.getElementById('remover-finalizados');
+const btnMoveUp = document.getElementById('mover-cima');
+const btnMoveDown = document.getElementById('mover-baixo');
+const btnDelete = document.querySelector('#remover-selecionado');
+const saveButton = document.querySelector('#salvar-tarefas');
 
-/*
- -(variáveis)
-*/
-let selectedItem = 0;
-
-
-/*
-  O bloco abaixo verifica se o 'input' está preenchido e caso esteja, adiciona a uma lista um novo elemento <li>
-  dentro da lista (taskList) com a tarefa que o usuário cadastrou.
-*/
-
-btnAdd.addEventListener('click', function () {
-  if (inputTextField.value.length > 0) {
-    const newLi = document.createElement('li');
-    newLi.innerText = inputTextField.value;
-    newLi.className = 'itemList'
-    taskList.appendChild(newLi);
-    inputTextField.value = '';
-    addBackGroundColor();
-  } else {
+//-- Adiciona um novo elemento(li)/item a lista.
+function addTask() {
+  if (inputTextField.value !== ''){
+    const newTask = document.createElement('li');
+    newTask.innerText = inputTextField.value;
+    taskList.appendChild(newTask);
+    inputTextField.value = ''; // Limpa o campo do input.
+  }else {
     alert('Error: Digite ao menos 1 caractere.');
   }
-});
-
-/*
-
-*/
-
-function addBackGroundColor() {
-  for (let i = 0; i < liItens.length; i++) {
-    liItens[i].addEventListener('click', function (event) {
-      selectedItem = i;
-      clearSelectedListItem(selectedItem);
-      liItens[i].style.backgroundColor = 'gray';
-    });
-    // 9 - Clicar duas vezes em um item, faz com que ele seja riscado, indicando que foi completo. Deve ser possível desfazer essa ação clicando novamente duas vezes no item
-    liItens[i].addEventListener('dblclick', switchCompleted);
-  }
 }
+btnAdd.addEventListener('click', addTask);
 
-function clearSelectedListItem(selectedItem) {
-  for (let i = 0; i < liItens.length; i += 1) {
-    if (i !== selectedItem) {
-      liItens[i].style.backgroundColor = 'rgba(255, 255, 255)';
+//-- Seleciona um elemento(li)/item da lista
+function selectTask() {
+  taskList.addEventListener('click', function(event) {
+    for (let i = 0; i < taskList.children.length; i++) {
+      if (taskList.children[i].classList.contains('selected')) {
+        taskList.children[i].classList.remove('selected');
+      }
     }
-  }
+    event.target.classList.add('selected');
+  });
 }
+selectTask();
 
-
-function switchCompleted(evento) {
-  const element = evento.target;
-  if (element.classList.contains('completed')) {
-    element.classList.remove('completed');
+//-- Comuta entre riscado e normal(completado e não completado) se um elemento(li)/item for 'clicado' duas vezes
+function commuteTo(event) {
+  const dblclick = event.target;
+  if (dblclick.classList.contains('completed')) {
+    dblclick.classList.remove('completed');
   } else {
-    element.classList.add('completed');
+    dblclick.classList.add('completed');
   }
 }
-
+taskList.addEventListener('dblclick', commuteTo);
 
 // 10 - Adicione um botão com id="apaga-tudo" que quando clicado deve apagar todos os itens da lista
-
 function clearList() {
-  const list = document.getElementById('lista-tarefas')
   //Material de consulta  
   //https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
   //https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
-  if (list.textContent !== '') {
-    list.textContent = '';
-  }
-  localStorage.clear();
+  // if (taskList.textContent !== '') {
+  //   taskList.textContent = '';
+  // }
+  taskList.innerHTML = '';// taskList  
 }
 
 // 11 - Adicione um botão com id="remover-finalizados" que quando clicado remove somente os elementos finalizados da sua lista
-function clearDone() {
-  const nodes = document.getElementsByClassName('completed');
-  //https://developer.mozilla.org/pt-BR/docs/Web/API/Node/removeChild
-  // Removendo todos os nós filhos de um elemento
-  // var elemento = document.getElementById("topo");
-  // while (list.firstChild) {
-  //   list.removeChild(list.firstChild);
-  // }
+// function clearDone() {
+//   const nodes = document.getElementsByClassName('completed');
+//   //https://developer.mozilla.org/pt-BR/docs/Web/API/Node/removeChild
+//   // Removendo todos os nós filhos de um elemento
+//   // var elemento = document.getElementById("topo");
+//   // while (parent.firstChild) {
+//   //   parent.removeChild(parent.firstChild);
+//   // }
 
-  for (let i = 0; i < nodes.length; i += 1) {
-    if (nodes[i].parentNode) {
-      nodes[i].parentNode.removeChild(nodes[i]);
-      i--; // compensa o nó removido da lista para calculo do for.
-    }
-  }
-  //addTasksToLocalStorage();
-}
-// BÔNUS
-// 12 - Adicione um botão com id="salvar-tarefas" que salve o conteúdo da lista. Se você fechar e reabrir a página, a lista deve continuar no estado em que estava
-// O que será verificado:
-// Será verificado que existe um elemento button com o id salvar-tarefas
-// Será verificado que, quando a lista tiver vários elementos, alguns dos quais marcados como finalizados, um recarregamento da página mantém a lista exatamente como está.
-
-/*
-// function addTasksToLocalStorage() {
-//   const oldList = JSON.parse(localStorage.getItem('tasks'));
-//   const taskText = inputTextField.value;
-//   oldList.push(taskText);
-//   localStorage.setItem('tasks', JSON.stringify(oldList));
-//   insertPhraseInDOM();
+//   for (let i = 0; i < nodes.length; i += 1) {
+//     if (nodes[i].parentNode) {
+//       nodes[i].parentNode.removeChild(nodes[i]);
+//       i--; // compensa o nó removido da lista para calculo do for.
+//     }
+//   }
+//   addTasksToLocalStorage();
 // }
-*/
 
-function insertPhraseInDOM() {
-  const phrasesList = JSON.parse(localStorage.getItem('tasks'));
-  const listLength = phrasesList.length - 1;
-  const phraseText = phrasesList[listLength];
-  const phrase = document.createElement('li');
-  phrase.innerText = phraseText;
-  taskList.appendChild(phrase);
-
+function clearCompletedTasks() {
+  for (let i = 0; i < taskList.children.length; i += 1) {
+    /* if (list[i].classList.contains('completed')) {
+      list.removeChild(list[i]);
+    } */
+    const completed = document.querySelector('.completed');
+    completed.remove();
+  }
 }
+btnClearCompleted.addEventListener('click', clearCompletedTasks);
 
+// function insertPhraseInDOM() {
+//   const storageTaskList = JSON.parse(localStorage.getItem('tasks'));
+//   const listLength = storageTaskList.length - 1;
+//   const phraseText = storageTaskList[listLength];
+//   const phrase = document.createElement('li');
+//   phrase.innerText = phraseText;
+//   taskList.appendChild(phrase);
+// }
 
+// Adiciona os objetos a lista
 // function addTasksToLocalStorage() {
 //   localStorage.clear(); // remove a lista que existe para criar a nova
 //   if (localStorage.getItem('tasks') === null) {
 //     localStorage.setItem('tasks', JSON.stringify([]));
-//    }
-//    const oldList = JSON.parse(localStorage.getItem('tasks'));
-//    for(i in liItens){
-//      const taskText = liItens[i].innerText; // pega o texto do elemento
-//      if(taskText != null){
-//        oldList.push(taskText);
-//      }
-//    }
-//    localStorage.setItem('tasks', JSON.stringify(oldList)); // Limpa a lista do save
-//   //  insertPhraseInDOM();
+//   }
+//   const oldList = JSON.parse(localStorage.getItem('tasks'));
+//   for (i in liItens) {
+//     const taskText = liItens[i].innerText; // pega o texto do elemento
+//     const newObj = {};
+//     if (taskText != null) {
+//       newObj.innerText = liItens[i].innerText;
+//       newObj.className = liItens[i].className;
+//       newObj.id = liItens[i].id;
+//       console.log(newObj)
+//       oldList.push(newObj);
+//     }
+//   }
+  //localStorage.setItem('tasks', JSON.stringify(oldList)); // Limpa a lista do save
+  
 // }
-function addTasksToLocalStorage() {
-  localStorage.clear(); // remove a lista que existe para criar a nova
-  if (localStorage.getItem('tasks') === null) {
-    localStorage.setItem('tasks', JSON.stringify([]));
-   }
-   const oldList = JSON.parse(localStorage.getItem('tasks'));
-   for(i in liItens){
-     const taskText = liItens[i].innerText; // pega o texto do elemento
-     const newObj = {};
-     if(taskText != null){
-      newObj.innerText = liItens[i].innerText;
-      newObj.className = liItens[i].className;
-      newObj.id = liItens[i].id;
-      console.log(newObj)
-      oldList.push(newObj);
-     }
-   }
-   localStorage.setItem('tasks', JSON.stringify(oldList)); // Limpa a lista do save
-  //  insertPhraseInDOM();
-}
-
+//-- 12 - Ao clicar no botão 'Salvar Lista', salve o conteúdo da lista, para que quando o navegador seja fechado, retome a lista no estado salvo. Feito com ajuda de Airel Ribeiro =)
+// Old - 
 // function initialRenderization() {
 //   if (localStorage.getItem('tasks') === null) {
-//    localStorage.setItem('tasks', JSON.stringify([]));
-//   } else {
-//     const phrasesList = JSON.parse(localStorage.getItem('tasks'));
-//     const listLength = phrasesList.length - 1;
+//     localStorage.setItem('tasks', JSON.stringify([])); // Caso não tenha a lista ainda, ela é criada
+//   } else { // caso a lista exista, ela é carregada
+//     const storageTaskList = JSON.parse(localStorage.getItem('tasks'));
+//     const listLength = storageTaskList.length - 1;
 //     for (let index = 0; index <= listLength; index += 1) {
-//       console.log(phrasesList[index]);
+//       console.log(storageTaskList[index]);
 //       const listElement = document.createElement('li');
-//       listElement.innerText = phrasesList[index];
+//       listElement.innerText = storageTaskList[index].innerText;
+//       listElement.className = storageTaskList[index].className;
+//       listElement.id = storageTaskList[index].id;
 //       taskList.appendChild(listElement);
 //     }
 //   }
 // }
-function initialRenderization() {
-  
-  if (localStorage.getItem('tasks') === null) {
-   localStorage.setItem('tasks', JSON.stringify([]));
-  } else {
-    const phrasesList = JSON.parse(localStorage.getItem('tasks'));
-    const listLength = phrasesList.length - 1;
-    for (let index = 0; index <= listLength; index += 1) {
-      console.log(phrasesList[index]);
-      const listElement = document.createElement('li');
-      listElement.innerText = phrasesList[index].innerText;
-      listElement.className = phrasesList[index].className;
-      listElement.id = phrasesList[index].id;
-      taskList.appendChild(listElement);
-    }
+
+// Otimizado
+//-- Códigos abaixo foram criados com o auxílio do código do Daniel Tostes, Turma 20 -Tribo B
+function saveList() {
+  localStorage.setItem('list', taskList.innerHTML);
+}
+//-- 13-1 - move o item selecionado para cima
+function moveUp() {
+  const selectedItem = document.querySelector('.selected');
+  const firstChild = taskList.firstElementChild;
+  if (selectedItem !== null && selectedItem !== firstChild) {
+    const previousElement = selectedItem.previousElementSibling;
+    previousElement.insertAdjacentElement('beforebegin', selectedItem);
   }
 }
 
+//-- 13-2 - move o item selecionado para baixo.
+function moveDown() {
+  const selectedItem = document.querySelector('.selected');
+  const lastChild = taskList.lastElementChild;
+  if (selectedItem !== null && selectedItem !== lastChild) {
+    const nextElement = selectedItem.nextElementSibling;
+    nextElement.insertAdjacentElement('afterend', selectedItem);
+  }
+}
+
+//-- 14 - Remover o item selecionado
+function deleteSelected() {
+  const selected = document.querySelector('.selected');
+  selected.remove();
+}
 
 window.onload = function () {
-  initialRenderization();
+  const renderLi = localStorage.getItem('list');
+  taskList.innerHTML = renderLi;
   btnClearAll.addEventListener('click', clearList);
-  btnClearDone.addEventListener('click', clearDone);
-  btnSaveTask.addEventListener('click', addTasksToLocalStorage)
-  // btnSaveTask.addEventListener('click', testStorage)
+  saveButton.addEventListener('click', saveList);
+  btnMoveUp.addEventListener('click', moveUp);
+  btnMoveDown.addEventListener('click', moveDown);
+  btnDelete.addEventListener('click', deleteSelected);
 };
-
-
-// function criarObjetoParaSalvar(elementoOrigem) {
-//   const objetoTarefas = {};
-//   for (let i = 0; i < elementoOrigem.length; i += 1) {
-//     const objetoInterno = {};
-//     objetoTarefas[`${i}`] = objetoInterno;
-//   }
-//   return objetoTarefas;
-// }
-
-// function salvarTarefas() {
-//   const elementosDaListaDeTarefas = listaDeTarefas.children;
-//   const objetoTarefas = criarObjetoParaSalvar(elementosDaListaDeTarefas);
-
-//   for (let i = 0; i < elementosDaListaDeTarefas.length; i += 1) {
-//     objetoTarefas[`${i}`].innerHTML = elementosDaListaDeTarefas[i].innerHTML;
-//     objetoTarefas[`${i}`].className = elementosDaListaDeTarefas[i].className;
-//     objetoTarefas[`${i}`].id = elementosDaListaDeTarefas[i].id;
-//   }
-//   localStorage.setItem('tarefas', JSON.stringify(objetoTarefas));
-// }
-
-
-
-// 13 - Adicione dois botões, um com id="mover-cima" e outro com id="mover-baixo", que permitam mover o item selecionado para cima ou para baixo na lista de tarefas
-// O que será verificado:
-// Será verificada a existência de dois elementos button, um com o id mover-cima e o outro com o id mover-baixo
-// Será verificado que, dado que diversos elementos foram acrescentados à lista, movimentá-los de formas diversas os deixa nas posições esperadas
-// Será verificado que, caso algum elemento esteja finalizado, este status deve persistir ainda que se mova o elemento
-// Será verificado que, caso nenhum elemento esteja selecionado, clicar nos botões não altera a lista
-// Será verificado que um elemento que esteja selecionado deve se manter selecionado mesmo depois de movido
-// Caso especial! Será verificado que, caso se tente subir o elemento no topo da lista ou, caso se tente descer o último elemento da lista, esta não deve ser alterada
-
-
-
-// 14 - Adicione um botão com id="remover-selecionado" que, quando clicado, remove o item selecionado
-// O que será verificado:
-// Será verificada a presença de um elemento button com um id remover-selecionado
-// Será verificado que, no clicar no botão, somente o elemento selecionado é removido
